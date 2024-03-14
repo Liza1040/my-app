@@ -1,24 +1,35 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import NameAge from './NameAge'
+import CatFact from './CatFact'
+import {
+  AppRoot,
+  View,
+  Panel,
+  PanelHeader,
+  CellButton,
+} from '@vkontakte/vkui';
+import '@vkontakte/vkui/dist/vkui.css';
 
 function App() {
+  const [activePanel, setActivePanel] = useState('cat-fact');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppRoot activeView="main">
+      <View id="main" activePanel={activePanel}>
+        <Panel id="cat-fact">
+        <PanelHeader>Cat Fact</PanelHeader>
+          <CatFact />
+          <CellButton onClick={() => setActivePanel('get-age')}>Find out age</CellButton>
+        </Panel>
+        
+        <Panel id="get-age">
+          <PanelHeader>Get age by name</PanelHeader>
+          <NameAge />
+          <CellButton onClick={() => setActivePanel('cat-fact')}>Get a fact about a cat</CellButton>
+        </Panel>
+      </View>
+    </AppRoot>
   );
 }
 
