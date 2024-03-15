@@ -28,7 +28,7 @@ function CatFact() {
   };
 
   return (
-    <div class="app-form">
+    <div className='content content__margin-left'>
         <Input type="text" defaultValue="" getRef={inputRef}/>
         <Button size="m" onClick={fetchCatFact}>
         Get fact

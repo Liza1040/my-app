@@ -8,18 +8,25 @@ import {
 const NameAge = () => {
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
+  const [error, setError] = useState('');
   const [lastRequest, setLastRequest] = useState(null);
 
   const handleNameChange = (event) => {
-    setName(event.target.value);
-    if (lastRequest) {
-      lastRequest.cancel('Request canceled');
+    const value = event.target.value;
+    if (/^[A-Za-z]+$/.test(value) || value === '') {
+      setName(value);
+      setError('');
+      if (lastRequest) {
+        lastRequest.cancel('Request canceled');
+      }
+      const source = axios.CancelToken.source();
+      setLastRequest(source);
+      setTimeout(() => {
+        makeAgifyRequest(event.target.value, source.token);
+      }, 3000);
+    } else {
+      setError('Имя может содержать только буквы');
     }
-    const source = axios.CancelToken.source();
-    setLastRequest(source);
-    setTimeout(() => {
-      makeAgifyRequest(event.target.value, source.token);
-    }, 3000);
   };
 
   const makeAgifyRequest = async (name, cancelToken) => {
@@ -53,14 +60,15 @@ const NameAge = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div class="app-form">
+    <form onSubmit={handleSubmit} className='content content-display-column content__margin-left'>
+      <div className="content-form">
         <Input type="text" value={name} onChange={handleNameChange} placeholder='Input name'/>
         <Button type="submit" size="m">
         Get age
         </Button>
       </div>
-      {age && <div class="age-output">Age: {age}</div>}
+      {error && <div className='form-error'>{error}</div>}
+      {age && <div>Age: {age}</div>}
     </form>
   );
 };
